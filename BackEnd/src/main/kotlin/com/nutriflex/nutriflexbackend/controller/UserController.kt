@@ -15,20 +15,25 @@ class UserController(
     private val userRepository: UserRepository,
     private val personalDataRepository: PersonalDataRepository
 ) {
+    @GetMapping("/health")
+    fun healthCheck(): ResponseEntity<Map<String, String>> {
+        return ResponseEntity.ok(mapOf("status" to "OK", "message" to "Backend is running"))
+    }
+    
     @PostMapping("/register")
     fun registerUser(@RequestBody registerRequest: RegisterRequest): ResponseEntity<Map<String, Any>> {
         println("=== REGISTRATION REQUEST RECEIVED ===")
-        println("Name: ${registerRequest.name}")
-        println("Email: ${registerRequest.email}")
-        println("Gender: ${registerRequest.gender}")
-        println("Motivation: ${registerRequest.motivation}")
-        println("Healthcare Issues: ${registerRequest.healthcareIssues}")
-        println("Injuries: ${registerRequest.injuries}")
-        println("Dietary Restrictions: ${registerRequest.dietaryRestrictions}")
-        println("Fitness Experience: ${registerRequest.fitnessExperience}")
+        println("Name: \\${registerRequest.name}")
+        println("Email: \\${registerRequest.email}")
+        println("Gender: \\${registerRequest.gender}")
+        println("Motivation: \\${registerRequest.motivation}")
+        println("Healthcare Issues: \\${registerRequest.healthcareIssues}")
+        println("Injuries: \\${registerRequest.injuries}")
+        println("Dietary Restrictions: \\${registerRequest.dietaryRestrictions}")
+        println("Fitness Experience: \\${registerRequest.fitnessExperience}")
         
         if (userRepository.findByEmail(registerRequest.email) != null) {
-            throw RuntimeException("Email already exists")
+            return ResponseEntity.status(409).body(mapOf("error" to "Email already exists"))
         }
         
         // Save user to user_data collection

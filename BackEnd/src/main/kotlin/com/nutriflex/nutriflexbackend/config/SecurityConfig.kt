@@ -16,7 +16,7 @@ class SecurityConfig {
             .csrf { it.disable() }
             .authorizeHttpRequests { authz ->
                 authz
-//                    .requestMatchers("/api/users/health").permitAll()
+                    .requestMatchers("/api/users/health").permitAll()
                     .requestMatchers("/api/users/register").permitAll()
                     .requestMatchers("/api/users/login").permitAll()
 //                    .requestMatchers("/api/fatsecret/**").permitAll()

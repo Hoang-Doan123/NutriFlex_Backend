@@ -41,7 +41,10 @@ class UserController(
             name = registerRequest.name,
             email = registerRequest.email,
             password = registerRequest.password,
-            gender = registerRequest.gender
+            gender = registerRequest.gender,
+            age = registerRequest.age,
+            weight = registerRequest.weight,
+            height = registerRequest.height
         )
         
         val savedUser = userRepository.save(user)

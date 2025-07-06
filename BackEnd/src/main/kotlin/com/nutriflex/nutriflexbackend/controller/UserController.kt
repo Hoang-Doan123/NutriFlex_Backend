@@ -107,4 +107,14 @@ class UserController(
             ResponseEntity.notFound().build()
         }
     }
+    
+    @GetMapping("/{userId}")
+    fun getUserById(@PathVariable userId: String): ResponseEntity<User?> {
+        val user = userRepository.findById(userId).orElse(null)
+        return if (user != null) {
+            ResponseEntity.ok(user)
+        } else {
+            ResponseEntity.notFound().build()
+        }
+    }
 }

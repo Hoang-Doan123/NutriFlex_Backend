@@ -42,6 +42,7 @@ class UserController(
             }
             // Save user to user_data collection
             val user = User(
+                id = null,
                 name = registerRequest.name,
                 email = registerRequest.email,
                 password = registerRequest.password,

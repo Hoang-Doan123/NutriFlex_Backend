@@ -15,13 +15,18 @@ data class MealPlan(
     data class MealEntry(
         val mealType: String, // breakfast, lunch, dinner
         val meal: Meal,
-        val time: String // e.g. "8:00 AM"
+        val time: String, // e.g. "8:00 AM"
+        val portionSize: Int? = null, // Số lượng phần ăn, đồng bộ với frontend
+        val notes: String? = null // Ghi chú, đồng bộ với frontend
     )
     data class NutritionSummary(
         val totalCalories: Int,
         val targetCalories: Int,
         val totalProtein: Double,
         val totalCarbohydrates: Double,
-        val totalFat: Double
+        val totalFat: Double,
+        val proteinPercentage: Double? = null,
+        val carbohydratePercentage: Double? = null,
+        val fatPercentage: Double? = null
     )
 } 

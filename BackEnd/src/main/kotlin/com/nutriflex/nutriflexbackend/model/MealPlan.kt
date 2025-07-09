@@ -14,7 +14,7 @@ data class MealPlan(
 ) {
     data class MealEntry(
         val mealType: String, // breakfast, lunch, dinner
-        val meal: Meal,
+        val meals: List<Meal>, // <-- List thay vì 1 món
         val time: String, // e.g. "8:00 AM"
         val portionSize: Int? = null, // Số lượng phần ăn, đồng bộ với frontend
         val notes: String? = null // Ghi chú, đồng bộ với frontend

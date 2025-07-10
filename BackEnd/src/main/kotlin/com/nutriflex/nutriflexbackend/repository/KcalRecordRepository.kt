@@ -4,5 +4,5 @@ import com.nutriflex.nutriflexbackend.model.KcalRecord
 import org.springframework.data.jpa.repository.JpaRepository
 
 interface KcalRecordRepository : JpaRepository<KcalRecord, Long> {
-    fun findAllByUserId(userId: Long): List<KcalRecord>
+    fun findAllByUserId(userId: String): List<KcalRecord>
 } 

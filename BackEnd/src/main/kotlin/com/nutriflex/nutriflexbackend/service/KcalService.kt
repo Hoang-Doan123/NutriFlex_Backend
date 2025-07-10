@@ -12,7 +12,7 @@ class KcalService(private val repo: KcalRecordRepository) {
         return weight * distance
     }
 
-    fun saveKcalRecord(userId: Long, distance: Double, duration: Int, weight: Double, route: String?): KcalRecord {
+    fun saveKcalRecord(userId: String, distance: Double, duration: Int, weight: Double, route: String?): KcalRecord {
         val kcal = calculateKcal(weight, distance)
         val record = KcalRecord(
             userId = userId,
@@ -25,5 +25,5 @@ class KcalService(private val repo: KcalRecordRepository) {
         return repo.save(record)
     }
 
-    fun getHistory(userId: Long): List<KcalRecord> = repo.findAllByUserId(userId)
+    fun getHistory(userId: String): List<KcalRecord> = repo.findAllByUserId(userId)
 } 

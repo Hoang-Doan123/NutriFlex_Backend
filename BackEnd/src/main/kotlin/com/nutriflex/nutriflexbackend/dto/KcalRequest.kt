@@ -1,7 +1,7 @@
 package com.nutriflex.nutriflexbackend.dto
 
 data class KcalRequest(
-    val userId: Long,
+    val userId: String,
     val distance: Double, // km
     val duration: Int,    // phút
     val weight: Double,   // kg

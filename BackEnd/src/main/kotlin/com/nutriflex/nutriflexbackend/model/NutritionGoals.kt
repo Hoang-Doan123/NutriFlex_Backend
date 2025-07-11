@@ -11,5 +11,6 @@ data class NutritionGoals(
     val allergies: List<String>? = null,
     val mealPlanType: String? = null,
     val mealsPerDay: Int? = 3,
-    val includeSnacks: Boolean? = false
+    val includeSnacks: Boolean? = false,
+    val mealPatternType: String? = null
 ) 

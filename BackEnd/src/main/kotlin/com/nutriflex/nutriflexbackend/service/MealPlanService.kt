@@ -31,7 +31,7 @@ class MealPlanService(
         // 4. Chia calories và macro cho từng bữa
         val mealsPerDay = goals.mealsPerDay ?: 3
         val mealTypes = listOf("breakfast", "lunch", "dinner").take(mealsPerDay)
-        val mealTimes = listOf("8:00 AM", "1:00 PM", "7:00 PM").take(mealsPerDay)
+        val mealTimes = listOf("8:00 AM", "12:00 PM", "7:00 PM").take(mealsPerDay)
         val targetCalories = goals.dailyCalories
         val proteinTarget = goals.proteinPercentage / 100.0 * targetCalories / 4.0
         val carbTarget = goals.carbohydratePercentage / 100.0 * targetCalories / 4.0

@@ -24,4 +24,20 @@ class MealPlanController(
         val saved = mealPlanRepository.save(mealPlan)
         return ResponseEntity.ok(saved)
     }
+
+    @GetMapping
+    fun getMealPlan(@RequestParam userId: String, @RequestParam date: String): ResponseEntity<MealPlan> {
+        val plan = mealPlanRepository.findByUserIdAndDate(userId, date)
+        return if (plan != null) ResponseEntity.ok(plan) else ResponseEntity.notFound().build()
+    }
+
+    @GetMapping("/{userId}/{date}")
+    fun getMealPlansByPath(
+        @PathVariable userId: String,
+        @PathVariable date: String
+    ): ResponseEntity<List<MealPlan>> {
+        val plans = mealPlanRepository.findAllByUserIdAndDate(userId, date)
+        println("[DEBUG] Found ${plans.size} meal plans for userId=$userId, date=$date")
+        return if (plans.isNotEmpty()) ResponseEntity.ok(plans) else ResponseEntity.notFound().build()
+    }
 } 

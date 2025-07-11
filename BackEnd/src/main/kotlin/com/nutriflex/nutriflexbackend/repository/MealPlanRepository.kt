@@ -8,4 +8,5 @@ import org.springframework.stereotype.Repository
 interface MealPlanRepository : MongoRepository<MealPlan, String> {
     fun findByUserIdAndDate(userId: String, date: String): MealPlan?
     fun findTop7ByUserIdOrderByDateDesc(userId: String): List<MealPlan>
+    fun findAllByUserIdAndDate(userId: String, date: String): List<MealPlan>
 } 

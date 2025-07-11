@@ -13,6 +13,6 @@ class KcalController(private val kcalService: KcalService) {
         kcalService.saveKcalRecord(req.userId, req.distance, req.duration, req.weight, req.route)
 
     @GetMapping("/history/{userId}")
-    fun getHistory(@PathVariable userId: Long): List<KcalRecord> =
+    fun getHistory(@PathVariable userId: String): List<KcalRecord> =
         kcalService.getHistory(userId)
 } 

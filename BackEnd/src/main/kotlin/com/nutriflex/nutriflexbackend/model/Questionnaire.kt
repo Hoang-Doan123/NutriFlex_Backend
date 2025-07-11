@@ -10,5 +10,11 @@ data class Questionnaire(
     @Id
     val id: String? = null,
     val userId: String,
-    val workoutType: String
+    val workoutType: String? = null,
+    val fitnessExperience: String? = null,
+    val injuries: List<String>? = null,
+    val healthcareIssues: List<String>? = null,
+    val dietaryRestrictions: List<String>? = null,
+    val goal: String? = null,
+    val motivation: String? = null
 ) 

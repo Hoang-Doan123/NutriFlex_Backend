@@ -17,8 +17,6 @@ class SecurityConfig {
             .authorizeHttpRequests { authz ->
                 authz.anyRequest().permitAll()
             }
-            .oauth2Client { }
-        
         return http.build()
     }
 } 

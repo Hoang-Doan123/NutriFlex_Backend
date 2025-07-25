@@ -14,10 +14,10 @@ data class MealPlan(
 ) {
     data class MealEntry(
         val mealType: String, // breakfast, lunch, dinner
-        val meals: List<Meal> = emptyList(), // <-- default value để tránh null
+        val meals: List<Meal> = emptyList(), // <-- default value to avoid null
         val time: String, // e.g. "8:00 AM"
-        val portionSize: Int? = null, // Số lượng phần ăn, đồng bộ với frontend
-        val notes: String? = null // Ghi chú, đồng bộ với frontend
+        val portionSize: Int? = null, // Number of servings, synchronized with frontend
+        val notes: String? = null // Synchronized with frontend
     )
     data class NutritionSummary(
         val totalCalories: Int,

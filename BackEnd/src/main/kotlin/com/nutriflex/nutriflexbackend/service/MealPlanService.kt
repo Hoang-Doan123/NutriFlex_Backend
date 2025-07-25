@@ -13,22 +13,22 @@ class MealPlanService(
 ) {
     fun generateMealPlan(userId: String, goals: NutritionGoals): MealPlan {
         val allMeals = mealRepository.findAll().toMutableList()
-        // 1. Lọc dị ứng, hạn chế
+        // 1. Filter allergies, limitations
         val filteredMeals = allMeals.filter { meal ->
             val restrictions = (goals.dietaryRestrictions ?: emptyList()) + (goals.allergies ?: emptyList())
             restrictions.none { restriction -> meal.name.contains(restriction, ignoreCase = true) }
         }.toMutableList()
-        // 2. Loại món đã ăn gần đây
+        // 2. Type of food eaten recently
         val recentPlans = mealPlanRepository.findTop7ByUserIdOrderByDateDesc(userId)
         val recentMealNames = recentPlans.flatMap { it.meals }.flatMap { it.meals }.map { it.name }.toSet()
         val availableMeals = filteredMeals.filter { meal -> meal.name !in recentMealNames }.toMutableList()
-        // 3. Ưu tiên sở thích (nếu có)
+        // 3. Prioritize foodPreferences (if any)
         val preferredMeals = if (!goals.foodPreferences.isNullOrEmpty()) {
             availableMeals.sortedByDescending { meal ->
                 goals.foodPreferences!!.count { pref -> meal.name.contains(pref, ignoreCase = true) }
             }
         } else availableMeals
-        // 4. Chia calories và macro cho từng bữa
+        // 4. Divide calories and macros for each meal
         val mealsPerDay = goals.mealsPerDay ?: 3
         val (mealTypes, mealTimes) = when (goals.mealPatternType) {
             "3" -> listOf("breakfast", "lunch", "dinner") to listOf("8:00 AM", "12:00 PM", "7:00 PM")
@@ -45,7 +45,7 @@ class MealPlanService(
         val perMealProtein = proteinTarget / mealsPerDay
         val perMealCarb = carbTarget / mealsPerDay
         val perMealFat = fatTarget / mealsPerDay
-        // 5. Knapsack chọn món cho từng bữa
+        // 5. Knapsack chooses dishes for each meal
         val mealEntries = mealTypes.zip(mealTimes).map { (type, time) ->
             val mealList = knapsackMeals(
                 preferredMeals,
@@ -71,7 +71,7 @@ class MealPlanService(
             carbohydratePercentage = goals.carbohydratePercentage,
             fatPercentage = goals.fatPercentage
         )
-        val today = java.time.LocalDate.now().format(java.time.format.DateTimeFormatter.ISO_DATE)
+        val today = LocalDate.now().format(DateTimeFormatter.ISO_DATE)
         return MealPlan(
             userId = userId,
             date = today,
@@ -79,7 +79,7 @@ class MealPlanService(
             nutritionSummary = nutritionSummary
         )
     }
-    // Knapsack chọn tối đa maxMeals món, tổng calories gần target nhất, macro lệch ít nhất
+    // Knapsack selects maxMeals item, total calories closest to target, macro deviation least
     private fun knapsackMeals(
         meals: List<Meal>,
         targetCalories: Int,
@@ -88,8 +88,8 @@ class MealPlanService(
         targetFat: Double,
         maxMeals: Int
     ): List<Meal> {
-        // Nếu số lượng món nhỏ, thử hết các tổ hợp
-        val candidates = meals.shuffled().take(30) // random sampling để tăng đa dạng
+        // If the number of dishes is small, try all combinations.
+        val candidates = meals.shuffled().take(30) // random sampling for diversity
         var bestCombo: List<Meal> = emptyList()
         var bestScore = Double.MAX_VALUE
         for (k in 1..maxMeals) {

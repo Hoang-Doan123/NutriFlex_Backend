@@ -6,9 +6,9 @@ import org.springframework.stereotype.Service
 
 @Service
 class KcalService(private val repo: KcalRecordRepository) {
-    // Công thức tính Kcal đốt cháy (ví dụ cho chạy bộ)
+    // Formula for calculating Kcal burned (example for jogging)
     fun calculateKcal(weight: Double, distance: Double): Double {
-        // Trung bình 1kg chạy 1km đốt ~1 kcal/kg/km
+        // On average, 1kg running 1km burns ~1 kcal/kg/km
         return weight * distance
     }
 

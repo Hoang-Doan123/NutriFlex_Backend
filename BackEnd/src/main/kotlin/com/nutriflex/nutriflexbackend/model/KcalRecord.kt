@@ -10,11 +10,11 @@ data class KcalRecord(
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long = 0,
     val userId: String,
-    val distance: Double, // quãng đường (km)
-    val duration: Int,    // thời gian (phút)
-    val weight: Double,   // cân nặng người dùng (kg)
-    val kcal: Double,     // lượng kcal đốt cháy
-    val route: String?,   // dữ liệu GPS (GeoJSON hoặc chuỗi toạ độ)
+    val distance: Double, // distance (km)
+    val duration: Int,    // time (minutes)
+    val weight: Double,   // user weight (kg)
+    val kcal: Double,     // calories burned
+    val route: String?,   // GPS data (GeoJSON or location)
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss")
     val createdAt: LocalDateTime = LocalDateTime.now()
 ) 

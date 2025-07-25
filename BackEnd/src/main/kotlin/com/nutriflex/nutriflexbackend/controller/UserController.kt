@@ -35,6 +35,7 @@ class UserController(
         println("Injuries: ${registerRequest.injuries}")
         println("Dietary Restrictions: ${registerRequest.dietaryRestrictions}")
         println("Fitness Experience: ${registerRequest.fitnessExperience}")
+        println("Activity Level: ${registerRequest.activityLevel}")
         try {
             if (userRepository.findByEmail(registerRequest.email) != null) {
                 println("Error: Email already exists")
@@ -64,7 +65,8 @@ class UserController(
                 injuries = registerRequest.injuries,
                 dietaryRestrictions = registerRequest.dietaryRestrictions,
                 fitnessExperience = registerRequest.fitnessExperience,
-                goal = registerRequest.goal
+                goal = registerRequest.goal,
+                activityLevel = registerRequest.activityLevel
             )
             println("Creating PersonalData with:")
             println("userId: ${personalData.userId}")
@@ -74,6 +76,7 @@ class UserController(
             println("injuries: ${personalData.injuries}")
             println("dietaryRestrictions: ${personalData.dietaryRestrictions}")
             println("fitnessExperience: ${personalData.fitnessExperience}")
+            println("activityLevel: ${personalData.activityLevel}")
             println("Saving personal data to database...")
             val savedPersonalData = personalDataRepository.save(personalData)
             println("PersonalData saved with ID: ${savedPersonalData.id}")

@@ -81,7 +81,7 @@ class MealController(
         val mealTimes = listOf("8:00 AM", "1:00 PM", "7:00 PM").take(mealsPerDay)
         val random = java.util.Random()
 
-        // 1. Chọn các món sao cho tổng calories gần nhất với targetCalories (tham lam)
+        // 1. Choose the meals so that the calories are closest to targetCalories (greedy)
         val selectedMeals = mutableListOf<Meal>()
         var totalCalories = 0
         for (meal in allMeals) {
@@ -89,17 +89,19 @@ class MealController(
                 selectedMeals.add(meal)
                 totalCalories += meal.calories
             }
-            if (totalCalories >= targetCalories * 0.95) break // dừng nếu đã gần đủ
+            if (totalCalories >= targetCalories * 0.95) break // Stop if it's enough/almost enough
         }
 
-        // 2. Nếu tổng calories vẫn nhỏ hơn target, thêm món nhỏ nhất cho đến khi đủ
+        // 2. If the total calories still smaller than the target, add the meal
+        // which has the smallest calories value until the total calories is enough
         val minCalMeal = allMeals.minByOrNull { it.calories }
         while (totalCalories < targetCalories * 0.9 && minCalMeal != null) {
             selectedMeals.add(minCalMeal)
             totalCalories += minCalMeal.calories
         }
 
-        // 3. Nếu tổng calories vượt quá 110%, loại bỏ món lớn nhất cho đến khi hợp lý
+        // 3. If the total calories is higher than 110%, remove the meal which
+        // has the highest calories value until the total calories makes sense
         while (totalCalories > targetCalories * 1.1 && selectedMeals.size > mealsPerDay) {
             val maxCalMeal = selectedMeals.maxByOrNull { it.calories }
             if (maxCalMeal != null) {
@@ -108,7 +110,7 @@ class MealController(
             } else break
         }
 
-        // 4. Chia đều các món đã chọn vào các bữa
+        // 4. Divide the selected dishes evenly into meals
         val mealEntries = mutableListOf<MealPlan.MealEntry>()
         val chunkSize = (selectedMeals.size + mealsPerDay - 1) / mealsPerDay
         for (i in mealTypes.indices) {
@@ -118,7 +120,7 @@ class MealController(
             mealEntries.add(MealPlan.MealEntry(mealType = mealTypes[i], meals = mealList, time = mealTimes[i]))
         }
 
-        // 5. Tính lại tổng dinh dưỡng
+        // 5. Recalculate the total calories
         val finalCalories = mealEntries.sumOf { it.meals.sumOf { meal -> meal.calories } }
         val totalProtein = mealEntries.sumOf { it.meals.sumOf { meal -> meal.protein } }
         val totalCarbs = mealEntries.sumOf { it.meals.sumOf { meal -> meal.carbohydrate } }
@@ -130,7 +132,7 @@ class MealController(
             totalCarbohydrates = totalCarbs,
             totalFat = totalFat
         )
-        val today = java.time.LocalDate.now().format(java.time.format.DateTimeFormatter.ISO_DATE)
+        val today = LocalDate.now().format(DateTimeFormatter.ISO_DATE)
         val mealPlan = MealPlan(
             userId = goals.userId,
             date = today,

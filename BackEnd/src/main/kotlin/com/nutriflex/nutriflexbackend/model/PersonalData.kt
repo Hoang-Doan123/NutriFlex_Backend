@@ -13,5 +13,6 @@ data class PersonalData(
     val injuries: List<String>? = null,
     val dietaryRestrictions: List<String>? = null,
     val fitnessExperience: String? = null,
-    val goal: String? = null
+    val goal: String? = null,
+    val activityLevel: String? = null // "sedentary", "light", "moderate", "active", "very_active"
 ) 

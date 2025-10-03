@@ -1,19 +1,19 @@
 package com.nutriflex.nutriflexbackend.controller
 
-import com.nutriflex.nutriflexbackend.dto.RegisterRequest
-import com.nutriflex.nutriflexbackend.model.PersonalData
-import com.nutriflex.nutriflexbackend.model.User
-import com.nutriflex.nutriflexbackend.repository.PersonalDataRepository
-import com.nutriflex.nutriflexbackend.repository.UserRepository
-import org.springframework.http.ResponseEntity
+import com.nutriflex.nutriflexbackend.dto.*
+import com.nutriflex.nutriflexbackend.model.*
+import com.nutriflex.nutriflexbackend.repository.*
+import org.springframework.http.*
 import org.springframework.web.bind.annotation.*
+import org.springframework.security.crypto.password.*
 
 @RestController
 @RequestMapping("/api/users")
 @CrossOrigin(origins = ["*"])
 class UserController(
     private val userRepository: UserRepository,
-    private val personalDataRepository: PersonalDataRepository
+    private val personalDataRepository: PersonalDataRepository,
+    private val passwordEncoder: PasswordEncoder
 ) {
     @GetMapping("/health")
     fun healthCheck(): ResponseEntity<Map<String, String>> {
@@ -100,17 +100,30 @@ class UserController(
     fun loginUser(@RequestBody loginRequest: Map<String, String>): ResponseEntity<User?> {
         val email = loginRequest["email"]
         val password = loginRequest["password"]
+        println("=== LOGIN REQUEST RECEIVED ===")
+        println("Email: ${email}")
         
         if (email == null || password == null) {
+            println("Login failed: missing email or password")
             return ResponseEntity.badRequest().build()
         }
         
         val user = userRepository.findByEmail(email)
-        if (user != null && user.password == password) {
-            return ResponseEntity.ok(user)
+        val matches = when {
+            user == null -> false
+            user.password == password -> true
+            user.password.startsWith("$2a$") || user.password.startsWith("$2b$") || user.password.startsWith("$2y$") ->
+                passwordEncoder.matches(password, user.password)
+            else -> false
         }
-        
-        return ResponseEntity.notFound().build()
+
+        return if (matches) {
+            println("Login success for userId: ${user!!.id}")
+            ResponseEntity.ok(user)
+        } else {
+            println("Login failed: invalid credentials for email: ${email}")
+            ResponseEntity.status(401).build()
+        }
     }
     
     @GetMapping("/{userId}/personal-data")

@@ -98,17 +98,18 @@ class UserController(
     
     @PostMapping("/login")
     fun loginUser(@RequestBody loginRequest: Map<String, String>): ResponseEntity<User?> {
-        val email = loginRequest["email"]
+        val emailOrUsername = loginRequest["email"] ?: loginRequest["username"]
         val password = loginRequest["password"]
         println("=== LOGIN REQUEST RECEIVED ===")
-        println("Email: ${email}")
+        println("Email/Username: ${emailOrUsername}")
         
-        if (email == null || password == null) {
-            println("Login failed: missing email or password")
+        if (emailOrUsername == null || password == null) {
+            println("Login failed: missing email/username or password")
             return ResponseEntity.badRequest().build()
         }
         
-        val user = userRepository.findByEmail(email)
+        // Try to find user by email first, then by username (name)
+        val user = userRepository.findByEmail(emailOrUsername) ?: userRepository.findByName(emailOrUsername)
         val matches = when {
             user == null -> false
             user.password == password -> true
@@ -121,7 +122,7 @@ class UserController(
             println("Login success for userId: ${user!!.id}")
             ResponseEntity.ok(user)
         } else {
-            println("Login failed: invalid credentials for email: ${email}")
+            println("Login failed: invalid credentials for email/username: ${emailOrUsername}")
             ResponseEntity.status(401).build()
         }
     }
